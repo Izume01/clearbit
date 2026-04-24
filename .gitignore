@@ -1,0 +1,7 @@
+node_modules/
+.env
+data/*.mmdb
+data/*.json
+*.log
+dist/
+.DS_Store
