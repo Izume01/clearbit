@@ -44,9 +44,19 @@ async function downloadDb(edition, filename) {
     console.log(`[download-maxmind]   Downloaded ${edition}.tar.gz`);
 
     // Extract .mmdb from tar.gz
-    // We need to find the .mmdb file inside the tar
+    // Alpine's BusyBox tar doesn't support --wildcards
     const { execSync } = await import('child_process');
-    execSync(`tar -xzf "${tarPath}" -C "${DATA_DIR}" --strip-components=1 --wildcards "*.mmdb"`, {
+    
+    // 1. List files to find the exact mmdb path
+    const fileList = execSync(`tar -tzf "${tarPath}"`).toString().split('\n');
+    const mmdbPath = fileList.find(f => f.endsWith('.mmdb'));
+    
+    if (!mmdbPath) {
+      throw new Error('Could not find .mmdb file inside tarball');
+    }
+
+    // 2. Extract specifically that file
+    execSync(`tar -xzf "${tarPath}" -C "${DATA_DIR}" --strip-components=1 "${mmdbPath}"`, {
       stdio: 'pipe',
     });
 

@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 const ROOT_DIR = join(__dirname, '..');
 
 export const config = {
-  port:  parseInt(process.env.PORT || '3000', 10),
+  port:  parseInt(process.env.PORT || '3100', 10),
   host:  process.env.HOST || '0.0.0.0',
 
   redis: {
