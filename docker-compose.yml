@@ -14,5 +14,20 @@ services:
       timeout: 3s
       retries: 5
 
+  api:
+    build: .
+    container_name: privi-api
+    ports:
+      - "3100:3100"
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://privi-redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
 volumes:
   redis-data:
